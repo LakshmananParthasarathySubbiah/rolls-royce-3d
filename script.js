@@ -15,16 +15,34 @@ controls.screenSpacePanning = false;
 const loader = new THREE.GLTFLoader();
 let carModel = null;
 
-// Loading indicator or placeholder
+// Show a loading indicator until the model is fully loaded
+const loadingIndicator = document.createElement('div');
+loadingIndicator.textContent = 'Loading...';
+loadingIndicator.style.position = 'absolute';
+loadingIndicator.style.top = '50%';
+loadingIndicator.style.left = '50%';
+loadingIndicator.style.transform = 'translate(-50%, -50%)';
+loadingIndicator.style.color = 'white';
+loadingIndicator.style.fontSize = '24px';
+document.body.appendChild(loadingIndicator);
+
+// Handle button click event to view the car model
 document.getElementById('viewCarBtn').addEventListener('click', function () {
   document.getElementById('3d-container').style.display = 'block'; // Show the 3D container
+  loadingIndicator.style.display = 'block'; // Show loading indicator
+
+  // Load the car model when the button is clicked
   loader.load('path_to_your_rolls_royce_model.glb', function (gltf) {
     carModel = gltf.scene;
     scene.add(carModel);
     carModel.scale.set(2, 2, 2);  // Scale the model to fit the scene
     carModel.position.set(0, 0, 0);  // Center the car in the scene
+    
+    // Hide loading indicator once the model is loaded
+    loadingIndicator.style.display = 'none';
   }, undefined, function (error) {
-    console.error(error);
+    console.error('An error occurred while loading the model: ', error);
+    loadingIndicator.textContent = 'Failed to load model';
   });
 });
 
@@ -34,7 +52,7 @@ camera.position.z = 5;
 // Render loop
 function animate() {
   requestAnimationFrame(animate);
-  controls.update();
+  controls.update(); // Update the controls for smooth interaction
   renderer.render(scene, camera);
 }
 animate();
