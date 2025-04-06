@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rolls-Royce 3D Animation</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/GLTFLoader.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rolls Royce Interactive Commercial</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="container"></div>
-    
-    <script src="script.js"></script>
+  <div class="header">
+    <h1>Rolls-Royce</h1>
+    <p>Experience Luxury Like Never Before</p>
+    <button id="viewCarBtn">View Car</button>
+  </div>
+  <div id="3d-container">
+    <canvas id="3d-canvas"></canvas>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/loaders/GLTFLoader.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/OrbitControls.js"></script>

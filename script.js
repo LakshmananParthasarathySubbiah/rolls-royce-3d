@@ -1,62 +1,47 @@
-// Set up basic variables
-let scene, camera, renderer, carModel;
-
-// Initialize the scene
-scene = new THREE.Scene();
-camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-// Set up the renderer
-renderer = new THREE.WebGLRenderer({ antialias: true });
+// Set up scene, camera, and renderer
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('3d-canvas') });
 renderer.setSize(window.innerWidth, window.innerHeight);
-document.getElementById('container').appendChild(renderer.domElement);
+document.body.appendChild(renderer.domElement);
 
-// Add ambient light and directional light
-const ambientLight = new THREE.AmbientLight(0x404040, 2); // Ambient light
-scene.add(ambientLight);
-
-const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
-directionalLight.position.set(5, 5, 5).normalize();
-scene.add(directionalLight);
-
-// Load the 3D Rolls-Royce model
-const loader = new THREE.GLTFLoader();
-loader.load('models/rolls-royce.gltf', function(gltf) {
-    carModel = gltf.scene;
-    carModel.scale.set(0.5, 0.5, 0.5); // Adjust model size
-    scene.add(carModel);
-}, undefined, function(error) {
-    console.error(error);
-});
-
-// Set camera position
-camera.position.z = 5;
-
-// Animation loop
-function animate() {
-    requestAnimationFrame(animate);
-
-    // Rotate the car model for animation effect
-    if (carModel) {
-        carModel.rotation.y += 0.01;
-    }
-
-    renderer.render(scene, camera);
-}
-
-animate();
-
-// Resize renderer on window resize
-window.addEventListener('resize', function() {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-});
+// Orbit controls for interactivity (rotation, zoom)
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;  // Smooth interaction
+controls.enableDamping = true;
 controls.dampingFactor = 0.25;
 controls.screenSpacePanning = false;
-const shadowLight = new THREE.PointLight(0xffffff, 1, 10);
-shadowLight.position.set(0, 5, 0);
-scene.add(shadowLight);
-carModel.castShadow = true;
-carModel.receiveShadow = true;
+
+// Load the 3D model of Rolls-Royce
+const loader = new THREE.GLTFLoader();
+let carModel = null;
+
+// Loading indicator or placeholder
+document.getElementById('viewCarBtn').addEventListener('click', function () {
+  document.getElementById('3d-container').style.display = 'block'; // Show the 3D container
+  loader.load('path_to_your_rolls_royce_model.glb', function (gltf) {
+    carModel = gltf.scene;
+    scene.add(carModel);
+    carModel.scale.set(2, 2, 2);  // Scale the model to fit the scene
+    carModel.position.set(0, 0, 0);  // Center the car in the scene
+  }, undefined, function (error) {
+    console.error(error);
+  });
+});
+
+// Set the camera position
+camera.position.z = 5;
+
+// Render loop
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+
+// Adjust canvas size when window is resized
+window.addEventListener('resize', () => {
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+});
